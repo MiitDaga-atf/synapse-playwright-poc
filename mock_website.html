@@ -153,7 +153,13 @@
     
     <script>
         // Configuration
-        const EXPORT_BUTTON_DELAY = 2000; // 2 seconds delay to simulate real API call
+        const MIN_DELAY = 2000;  // 2 seconds minimum
+        const MAX_DELAY = 6000;  // 6 seconds maximum
+        
+        // Generate random delay between MIN and MAX (simulates flaky UI)
+        function getRandomDelay() {
+            return Math.floor(Math.random() * (MAX_DELAY - MIN_DELAY + 1)) + MIN_DELAY;
+        }
         
         // Random button positioning for hamburger button only (export is hidden initially)
         function randomizeButtonPositions() {
@@ -190,12 +196,13 @@
                 this.classList.add('clicked');
                 this.textContent = '✓ Menu Opened';
                 
-                // Show status
+                // Show status with random delay info
                 const status = document.getElementById('status');
+                const delay = getRandomDelay();
                 status.style.display = 'block';
-                status.innerHTML = '<strong>Hamburger Menu Clicked!</strong><br><span class="loading-text">⏳ Simulating API call... Export button will appear soon...</span>';
+                status.innerHTML = `<strong>Hamburger Menu Clicked!</strong><br><span class="loading-text">⏳ Simulating API call... (delay: ${delay/1000}s)...</span>`;
                 
-                // Simulate API delay before showing export button
+                // Simulate API delay before showing export button (random 2-6 seconds)
                 setTimeout(() => {
                     const exportBtn = document.getElementById('export-btn');
                     const container = document.getElementById('button-area');
@@ -218,7 +225,7 @@
                     exportBtn.dataset.y = y2;
                     
                     console.log('Export button appeared at position:', x2, y2);
-                }, EXPORT_BUTTON_DELAY);
+                }, delay);  // Use the random delay variable
             }
         });
         

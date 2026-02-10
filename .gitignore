@@ -49,6 +49,9 @@ temp/
 playwright/.cache/
 playwright/browsers/
 
+# Screenshots
+screenshots/
+
 # Credentials (if any)
 *.pem
 *.key
