@@ -1,0 +1,196 @@
+# ============================================
+# Python Project Configuration for Data Engineering
+# ============================================
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# ============================================
+# Project Metadata
+# ============================================
+[project]
+name = "synapse-data-engineering"
+version = "0.1.0"
+description = "Data Engineering project with Python, dbt, and BigQuery"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "Data Engineering Team", email = "data-team@example.com"}
+]
+dependencies = [
+    "playwright>=1.40.0",
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+# ============================================
+# Black Configuration
+# ============================================
+[tool.black]
+line-length = 88
+target-version = ['py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | venv
+  | __pycache__
+  | dbt_packages
+  | target
+)/
+'''
+skip-string-normalization = false
+preview = false
+
+# ============================================
+# Ruff Configuration
+# ============================================
+[tool.ruff]
+target-version = "py39"
+line-length = 88
+show-source = true
+show-rule-codes = true
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "N",
+    "UP",
+    "B",
+    "C4",
+    "SIM",
+    "TCH",
+    "PTH",
+    "PERF",
+    "RUF",
+]
+
+ignore = [
+    "E501",
+    "B008",
+    "C901",
+    "SIM108",
+]
+
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "dbt_packages",
+    "target",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["synapse"]
+combine-as-imports = true
+split-on-trailing-comma = false
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "double"
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/*.py" = ["S101"]
+
+# ============================================
+# mypy Configuration (Optional)
+# ============================================
+[tool.mypy]
+python_version = "3.9"
+show_error_codes = true
+show_column_numbers = true
+warn_unused_ignores = true
+warn_return_any = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+exclude = [
+    "venv",
+    ".venv",
+    "build",
+    "dist",
+    "dbt_packages",
+    "target",
+]
+
+# ============================================
+# pytest Configuration (Optional)
+# ============================================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+pythonpath = "."
+minversion = "7.0"
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--verbose",
+    "--tb=short",
+]
+markers = [
+    "slow: marks tests as slow",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+# ============================================
+# Coverage Configuration (Optional)
+# ============================================
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "tests/*",
+    "__init__.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+precision = 2

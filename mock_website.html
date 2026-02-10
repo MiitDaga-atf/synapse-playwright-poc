@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Website - Auto Click POC</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .button-container {
+            position: relative;
+            height: 300px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            margin: 20px 0;
+            background: #fafafa;
+        }
+        
+        .button-container h3 {
+            margin: 10px;
+            color: #666;
+        }
+        
+        .random-button {
+            position: absolute;
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        
+        .random-button:hover {
+            transform: scale(1.05);
+        }
+        
+        #hamburger-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        #export-btn {
+            background-color: #2196F3;
+            color: white;
+            display: none; /* Hidden initially - appears after hamburger is clicked */
+        }
+        
+        #export-btn.loading {
+            background-color: #ff9800; /* Orange while loading */
+        }
+        
+        #status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            background: #fff3cd;
+            display: none;
+        }
+        
+        .clicked {
+            background-color: #9e9e9e !important;
+            cursor: not-allowed !important;
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mock Website - Auto Click POC</h1>
+        
+        <div class="info">
+            <strong>Instructions:</strong> This page simulates real-world behavior.
+            <br>1. Click the <strong>Hamburger Menu</strong> button (green)
+            <br>2. Wait for the <strong>Export</strong> button to appear (simulates API call)
+            <br>3. Click the Export button (blue)
+            <br><br>
+            <em>The Export button appears after a 2-second delay to simulate real-world scenarios.</em>
+        </div>
+        
+        <div class="button-container" id="button-area">
+            <h3>Click Area</h3>
+            
+            <!-- Hamburger Menu Button -->
+            <button 
+                id="hamburger-btn" 
+                class="random-button"
+                name="hamburger"
+                role="button"
+                data-testid="hamburger-menu"
+                aria-label="Open menu">
+                ☰ Hamburger Menu
+            </button>
+            
+            <!-- Export Button (hidden initially) -->
+            <button 
+                id="export-btn" 
+                class="random-button"
+                name="export"
+                role="button"
+                data-testid="export-button"
+                aria-label="Export data">
+                📤 Export
+            </button>
+        </div>
+        
+        <div id="status"></div>
+    </div>
+    
+    <script>
+        // Configuration
+        const EXPORT_BUTTON_DELAY = 2000; // 2 seconds delay to simulate real API call
+        
+        // Random button positioning for hamburger button only (export is hidden initially)
+        function randomizeButtonPositions() {
+            const container = document.getElementById('button-area');
+            const btn1 = document.getElementById('hamburger-btn');
+            const btn2 = document.getElementById('export-btn');
+            
+            // Available space (accounting for button sizes)
+            const maxX = container.offsetWidth - 150;
+            const maxY = container.offsetHeight - 50;
+            
+            // Generate random position for hamburger button
+            const x1 = Math.floor(Math.random() * maxX);
+            const y1 = Math.floor(Math.random() * maxY);
+            
+            // Apply position to hamburger button
+            btn1.style.left = x1 + 'px';
+            btn1.style.top = y1 + 'px';
+            
+            // Export button will be positioned when it appears
+            
+            // Store positions for Playwright to read
+            btn1.dataset.x = x1;
+            btn1.dataset.y = y1;
+        }
+        
+        // Handle button clicks
+        let hamburgerClicked = false;
+        let exportClicked = false;
+        
+        document.getElementById('hamburger-btn').addEventListener('click', function() {
+            if (!hamburgerClicked) {
+                hamburgerClicked = true;
+                this.classList.add('clicked');
+                this.textContent = '✓ Menu Opened';
+                
+                // Show status
+                const status = document.getElementById('status');
+                status.style.display = 'block';
+                status.innerHTML = '<strong>Hamburger Menu Clicked!</strong><br><span class="loading-text">⏳ Simulating API call... Export button will appear soon...</span>';
+                
+                // Simulate API delay before showing export button
+                setTimeout(() => {
+                    const exportBtn = document.getElementById('export-btn');
+                    const container = document.getElementById('button-area');
+                    
+                    // Generate random position for export button
+                    const maxX = container.offsetWidth - 150;
+                    const maxY = container.offsetHeight - 50;
+                    const x2 = Math.floor(Math.random() * maxX);
+                    const y2 = Math.floor(Math.random() * maxY);
+                    
+                    exportBtn.style.left = x2 + 'px';
+                    exportBtn.style.top = y2 + 'px';
+                    exportBtn.style.display = 'block';
+                    
+                    // Update status
+                    status.innerHTML = '<strong>Hamburger Menu Clicked!</strong><br>✅ Export button is now available!';
+                    
+                    // Store position
+                    exportBtn.dataset.x = x2;
+                    exportBtn.dataset.y = y2;
+                    
+                    console.log('Export button appeared at position:', x2, y2);
+                }, EXPORT_BUTTON_DELAY);
+            }
+        });
+        
+        document.getElementById('export-btn').addEventListener('click', function() {
+            if (hamburgerClicked && !exportClicked) {
+                exportClicked = true;
+                this.classList.add('clicked');
+                this.textContent = '✓ Exported!';
+                
+                const status = document.getElementById('status');
+                status.style.background = '#d4edda';
+                status.style.color = '#155724';
+                status.innerHTML = '<strong>Success!</strong><br>Both buttons have been clicked in succession.<br>Time delay was ' + (EXPORT_BUTTON_DELAY/1000) + ' seconds between clicks.';
+            } else if (!hamburgerClicked) {
+                const status = document.getElementById('status');
+                status.style.display = 'block';
+                status.innerHTML = '<strong>Error:</strong> Please click the Hamburger Menu first!';
+            }
+        });
+        
+        // Initialize on load
+        window.addEventListener('load', randomizeButtonPositions);
+    </script>
+</body>
+</html>
