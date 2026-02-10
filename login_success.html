@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Successful</title>
+    <style>
+        :root {
+            --bg: #f4f6fb;
+            --card: #ffffff;
+            --text: #1f2937;
+            --success: #16a34a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            width: 360px;
+            background: var(--card);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 36px;
+            color: var(--success);
+            margin-bottom: 10px;
+        }
+
+        .title {
+            margin: 0 0 6px;
+            font-size: 20px;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <div class="icon">✓</div>
+        <h1 class="title">Login successful</h1>
+        <p class="subtitle">You are now signed in.</p>
+    </main>
+</body>
+</html>
