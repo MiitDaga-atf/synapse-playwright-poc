@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRIX Mockup</title>
+  <link rel="icon" type="image/x-icon" href="https://console.strixai.jp/assets/favicon-DgCXIuV6.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-app: #f4f5f7;
+      --bg-panel: #ffffff;
+      --bg-subtle: #f8f9fb;
+      --border: #e3e6eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --primary: #3b5bfd;
+      --primary-soft: rgba(59, 91, 253, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: "Noto Sans JP", sans-serif;
+      color: var(--text);
+      background: var(--bg-app);
+    }
+
+    .h-screen {
+      height: 100vh;
+    }
+
+    .app-root {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--bg-app);
+    }
+
+    #mockSidebar {
+      width: 216px;
+      min-width: 216px;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      transition: width 0.2s ease, min-width 0.2s ease;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    #mockSidebar.collapsed {
+      width: 64px;
+      min-width: 64px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 8px 8px;
+    }
+
+    .logo {
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 8px;
+      white-space: nowrap;
+    }
+
+    .logo .mark {
+      font-size: 20px;
+    }
+
+    #mockSidebar.collapsed .logo-text,
+    #mockSidebar.collapsed nav span,
+    #mockSidebar.collapsed .profile-text {
+      display: none;
+    }
+
+    nav {
+      flex: 1;
+      padding: 8px;
+      overflow: auto;
+      font-size: 14px;
+    }
+
+    .menu-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 8px;
+      padding: 9px 10px;
+      color: #374151;
+      text-decoration: none;
+      margin-bottom: 2px;
+      white-space: nowrap;
+    }
+
+    .menu-link:hover {
+      background: #f3f4f6;
+    }
+
+    .menu-link.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .menu-sep {
+      height: 1px;
+      background: var(--border);
+      margin: 10px 4px;
+    }
+
+    .sidebar-footer {
+      border-top: 1px solid var(--border);
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg-panel);
+    }
+
+    .main-scroll {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .topbar {
+      padding: 8px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-panel);
+    }
+
+    .topbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .topbar-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: lowercase;
+    }
+
+    .search-wrap {
+      position: relative;
+      width: 260px;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 8px;
+      top: 9px;
+      color: #9ca3af;
+      width: 16px;
+      height: 16px;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 0 10px 0 30px;
+      font-size: 13px;
+      outline: none;
+      background: #fff;
+    }
+
+    .search-wrap input:focus {
+      border-color: #94a3b8;
+      box-shadow: 0 0 0 3px rgba(59, 91, 253, 0.15);
+    }
+
+    .tabs-bar {
+      padding: 10px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: #fff;
+    }
+
+    .tabs-side,
+    .control-side {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-list {
+      display: inline-flex;
+      gap: 4px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 4px;
+      background: #f7f8fa;
+    }
+
+    .table-region {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+
+    [data-slot="table-container"] {
+      width: 100%;
+      overflow: auto;
+    }
+
+    [data-slot="table"] {
+      width: 100%;
+      min-width: 1320px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 14px;
+    }
+
+    [data-slot="table-head"] {
+      height: 40px;
+      padding: 0 8px;
+      text-align: left;
+      font-weight: 500;
+      color: #374151;
+      border-bottom: 1px solid var(--border);
+      background: #f6f8fb;
+    }
+
+    [data-slot="table-cell"] {
+      height: 48px;
+      padding: 8px;
+      border-bottom: 1px solid #eef0f4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    [data-slot="table-row"]:hover {
+      background: #fafbfc;
+    }
+
+    .muted {
+      color: #9ca3af;
+    }
+
+    button[data-slot="checkbox"] {
+      width: 16px;
+      height: 16px;
+      border: 1px solid #cfd5de;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    button[data-slot="checkbox"]:hover {
+      border-color: #94a3b8;
+    }
+
+    #actionsMenuWrap {
+      position: fixed;
+      right: 286px;
+      top: 42px;
+      z-index: 60;
+    }
+
+    #actionsMenuWrap[hidden] {
+      display: none;
+    }
+
+    #actionsMenu {
+      width: 220px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+      padding: 4px;
+      font-size: 14px;
+    }
+
+    #actionsMenu [role="menuitem"] {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: #374151;
+    }
+
+    #actionsMenu [role="menuitem"]:hover {
+      background: #f4f6fa;
+    }
+
+    #actionsMenu [data-disabled] {
+      color: #9ca3af;
+    }
+
+    .truncate {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .text-sm {
+      font-size: 13px;
+    }
+
+    .text-xs {
+      font-size: 12px;
+    }
+
+    .text-gray-500 {
+      color: #6b7280;
+    }
+
+    .right-fixed-chat {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 50;
+    }
+
+    tbody button[data-slot="dropdown-menu-trigger"] {
+      border: 0;
+      background: transparent;
+    }
+
+    tbody button[data-slot="dropdown-menu-trigger"]:hover {
+      background: #eef1f6;
+    }
+
+    @media (max-width: 1100px) {
+      #mockSidebar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+      }
+
+      #mockSidebar.collapsed {
+        transform: translateX(-100%);
+      }
+
+      .tabs-bar {
+        align-items: flex-start;
+      }
+
+      .tabs-side,
+      .control-side {
+        flex-wrap: wrap;
+      }
+
+      #actionsMenuWrap {
+        right: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div class="app-root h-screen overflow-hidden flex bg-background-app">
+      <aside id="mockSidebar" class="w-54 bg-white border-r border-gray-200 h-full overflow-y-auto transition-all duration-300 flex flex-col">
+        <div class="logo-wrap">
+          <a class="logo" href="#" data-discover="true" aria-label="STRIX home">
+            <span class="mark">◍◍</span>
+            <span class="logo-text">STRIX</span>
+          </a>
+          <button class="p-1 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600" aria-label="サイドバーを折りたたむ" id="sidebarToggle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left h-4 w-4">
+              <path d="m15 18-6-6 6-6"></path>
+            </svg>
+          </button>
+        </div>
+
+        <nav class="flex-1 p-2 space-y-1 text-sm">
+          <a title="録音・録画" class="menu-link" href="#" data-discover="true">
+            <span>◉</span><span>Recording and filming</span>
+          </a>
+          <div class="menu-sep"></div>
+          <a title="ダッシュボード" class="menu-link" href="#" data-discover="true"><span>▦</span><span>Dashboard</span></a>
+          <a title="商談ログ" class="menu-link" href="#" data-discover="true"><span>▤</span><span>Deal Log</span></a>
+          <a title="取引" class="menu-link active" href="#" data-discover="true" aria-current="page"><span>▣</span><span>transaction</span></a>
+          <a title="会社" class="menu-link" href="#" data-discover="true"><span>▥</span><span>company</span></a>
+          <a title="コンタクト" class="menu-link" href="#" data-discover="true"><span>◌</span><span>contact</span></a>
+          <a title="コールログ" class="menu-link" href="#" data-discover="true"><span>☰</span><span>Call Log</span></a>
+          <div class="menu-sep"></div>
+          <a title="商談音声" class="menu-link" href="#" data-discover="true"><span>◉</span><span>Business negotiation audio</span></a>
+          <div class="menu-sep"></div>
+          <a title="タスク" class="menu-link" href="#" data-discover="true"><span>☑</span><span>task</span></a>
+          <div class="menu-sep"></div>
+          <a title="ワークフロー" class="menu-link" href="#" data-discover="true"><span>⌘</span><span>Workflow</span></a>
+          <a title="利用履歴" class="menu-link" href="#" data-discover="true"><span>↺</span><span>Usage history</span></a>
+          <a title="設定" class="menu-link" href="#" data-discover="true"><span>⚙</span><span>setting</span></a>
+        </nav>
+
+        <div class="sidebar-footer p-2 border-t border-gray-200 space-y-2">
+          <button type="button" id="radix-ri" aria-haspopup="menu" aria-expanded="false" data-state="closed" data-slot="dropdown-menu-trigger" class="w-full p-2 flex items-center justify-between text-xs text-gray-800 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors">
+            <div class="flex items-center gap-2 profile-text">
+              <span class="truncate">Akatsuki AI Technologies Inc.</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 flex-shrink-0">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </button>
+          <button type="button" id="radix-rk" aria-haspopup="menu" aria-expanded="false" data-state="closed" data-slot="dropdown-menu-trigger" class="w-full p-2 flex items-center justify-between text-xs text-gray-800 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors">
+            <div class="flex items-center gap-2 profile-text">
+              <span class="truncate">pit-synapse-dev@aktsk.ai</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 flex-shrink-0">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main flex-1 flex flex-col overflow-hidden">
+        <div class="main-scroll flex-1 min-h-0 overflow-auto">
+          <div class="topbar px-6 py-2">
+            <div class="topbar-row flex items-center justify-between">
+              <h1 class="topbar-title text-sm">transaction</h1>
+              <div class="flex gap-2 items-center">
+                <div class="search-wrap relative w-64">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-2 top-2.5 h-4 w-4 text-muted-foreground">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
+                  </svg>
+                  <input data-slot="input" class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 flex w-full min-w-0 rounded-md border-1 border-border-subtle bg-white px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive pl-8 pr-8 h-9" placeholder="Search by deal name..." value="">
+                </div>
+                <button data-slot="dropdown-menu-trigger" class="inline-flex items-center justify-center whitespace-nowrap text-sm leading-none transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border-1 border-border-subtle bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5" type="button" id="actionsMenuButton" aria-haspopup="menu" aria-expanded="false" data-state="closed" aria-controls="actionsMenu">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical h-4 w-4">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                  </svg>
+                </button>
+                <button data-slot="button" class="inline-flex items-center justify-center whitespace-nowrap text-sm leading-none transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border-1 border-border-subtle bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus h-4 w-4 mr-1">
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5v14"></path>
+                  </svg>
+                  Add a Transaction
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs-bar px-6 pb-2 flex items-center justify-between border-b">
+            <div class="tabs-side flex items-center gap-2 flex-1">
+              <div dir="ltr" data-orientation="horizontal" data-slot="tabs" class="flex flex-col gap-2">
+                <div role="tablist" aria-orientation="horizontal" data-slot="tabs-list" class="tab-list bg-surface text-muted-foreground inline-flex h-10 items-center justify-center rounded-lg border-1 border-border-subtle p-1" tabindex="0" data-orientation="horizontal">
+                  <button type="button" role="tab" aria-selected="true" aria-controls="tab-all" data-state="active" id="tab-all-trigger" data-slot="tabs-trigger" class="flex h-full flex-1 basis-0 items-center justify-center gap-1.5 rounded-md px-6 py-1.5 text-sm font-medium whitespace-nowrap transition-all text-muted-foreground hover:text-primary data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm dark:data-[state=active]:bg-input/30 dark:data-[state=active]:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 min-w-[120px]">all</button>
+                  <button type="button" role="tab" aria-selected="false" aria-controls="tab-month" data-state="inactive" id="tab-month-trigger" data-slot="tabs-trigger" class="flex h-full flex-1 basis-0 items-center justify-center gap-1.5 rounded-md px-6 py-1.5 text-sm font-medium whitespace-nowrap transition-all text-muted-foreground hover:text-primary data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm dark:data-[state=active]:bg-input/30 dark:data-[state=active]:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 min-w-[120px]"><span class="truncate">This month (Won+Commit+Best Case)</span></button>
+                  <button type="button" role="tab" aria-selected="false" aria-controls="tab-shimada" data-state="inactive" id="tab-shimada-trigger" data-slot="tabs-trigger" class="flex h-full flex-1 basis-0 items-center justify-center gap-1.5 rounded-md px-6 py-1.5 text-sm font-medium whitespace-nowrap transition-all text-muted-foreground hover:text-primary data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm dark:data-[state=active]:bg-input/30 dark:data-[state=active]:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 min-w-[120px]"><span class="truncate">Shimada case</span></button>
+                  <button type="button" role="tab" aria-selected="false" aria-controls="tab-negishi" data-state="inactive" id="tab-negishi-trigger" data-slot="tabs-trigger" class="flex h-full flex-1 basis-0 items-center justify-center gap-1.5 rounded-md px-6 py-1.5 text-sm font-medium whitespace-nowrap transition-all text-muted-foreground hover:text-primary data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm dark:data-[state=active]:bg-input/30 dark:data-[state=active]:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 min-w-[120px]"><span class="truncate">Negishi case</span></button>
+                  <button type="button" role="tab" aria-selected="false" aria-controls="tab-asato" data-state="inactive" id="tab-asato-trigger" data-slot="tabs-trigger" class="flex h-full flex-1 basis-0 items-center justify-center gap-1.5 rounded-md px-6 py-1.5 text-sm font-medium whitespace-nowrap transition-all text-muted-foreground hover:text-primary data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm dark:data-[state=active]:bg-input/30 dark:data-[state=active]:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 min-w-[120px]"><span class="truncate">Asato case</span></button>
+                  <button type="button" role="tab" aria-selected="false" aria-controls="tab-takahashi" data-state="inactive" id="tab-takahashi-trigger" data-slot="tabs-trigger" class="flex h-full flex-1 basis-0 items-center justify-center gap-1.5 rounded-md px-6 py-1.5 text-sm font-medium whitespace-nowrap transition-all text-muted-foreground hover:text-primary data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm dark:data-[state=active]:bg-input/30 dark:data-[state=active]:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 min-w-[120px]"><span class="truncate">Takahashi project</span></button>
+                </div>
+              </div>
+              <button data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent dark:hover:bg-accent/50 h-9 px-4 py-2 has-[>svg]:px-3 text-xs text-gray-700 hover:text-gray-900 flex-shrink-0">All Views</button>
+            </div>
+
+            <div class="control-side flex items-center gap-2">
+              <button data-slot="button" class="inline-flex items-center justify-center whitespace-nowrap text-sm leading-none transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border-1 border-border-subtle bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 pr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-filter h-4 w-4 mr-1">
+                  <path d="M3 6h18"></path>
+                  <path d="M7 12h10"></path>
+                  <path d="M10 18h4"></path>
+                </svg>
+                filter
+              </button>
+              <button data-slot="button" class="inline-flex items-center justify-center whitespace-nowrap text-sm leading-none transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border-1 border-border-subtle bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings2 lucide-settings-2 h-4 w-4 mr-1">
+                  <path d="M20 7h-9"></path>
+                  <path d="M14 17H5"></path>
+                  <circle cx="17" cy="17" r="3"></circle>
+                  <circle cx="7" cy="7" r="3"></circle>
+                </svg>
+                display
+              </button>
+
+              <div class="flex items-center space-x-2">
+                <button type="button" role="combobox" aria-controls="radix-reu" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" data-slot="select-trigger" data-size="sm" class="data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 hover:bg-background-app flex items-center justify-between gap-2 rounded-md border-1 border-border-subtle bg-white px-3 text-sm whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 w-[80px]">
+                  <span data-slot="select-value" style="pointer-events: none;">30</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down size-4 opacity-50" aria-hidden="true">
+                    <path d="m6 9 6 6 6-6"></path>
+                  </svg>
+                </button>
+                <div class="text-sm text-gray-500">1 - 30 / 99 items</div>
+                <div class="flex items-center space-x-1">
+                  <button data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm leading-none transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 h-8 w-8" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left h-4 w-4">
+                      <path d="m15 18-6-6 6-6"></path>
+                    </svg>
+                  </button>
+                  <span class="text-sm text-gray-500">1 / 1</span>
+                  <button data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm leading-none transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 h-8 w-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right h-4 w-4">
+                      <path d="m9 18 6-6-6-6"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-region border-t border-b">
+            <div data-slot="table-container" class="relative w-full overflow-x-auto">
+              <table data-slot="table" class="w-full caption-bottom text-sm table-fixed">
+                <colgroup>
+                  <col style="width: 48px;">
+                  <col style="width: 320px;">
+                  <col style="width: 220px;">
+                  <col style="width: 120px;">
+                  <col style="width: 120px;">
+                  <col style="width: 140px;">
+                  <col style="width: 190px;">
+                  <col style="width: 160px;">
+                  <col style="width: 160px;">
+                  <col style="width: 150px;">
+                  <col style="width: 64px;">
+                </colgroup>
+                <thead data-slot="table-header" class="bg-surface dark:bg-muted/50 [&_tr]:border-b">
+                  <tr data-slot="table-row" class="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors min-h-12">
+                    <th data-slot="table-head" class="text-foreground h-10 px-2 text-left align-middle font-normal whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] w-12 pl-6">
+                      <button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" data-slot="checkbox" class="peer bg-white border-border-subtle dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50" aria-label="Select all"></button>
+                    </th>
+                    <th data-slot="table-head" class="text-foreground h-10 px-2 text-left align-middle font-normal whitespace-nowrap">Trade Name</th>
+                    <th data-slot="table-head" class="text-foreground h-10 px-2 text-left align-middle font-normal whitespace-nowrap">company</th>
+                    <th data-slot="table-head" class="text-foreground h-10 px-2 text-left align-middle font-normal whitespace-nowrap">Score</th>
+                    <th data-slot="table-head" class="text-foreground h-10 px-2 text-left align-middle font-normal whitespace-nowrap">Merchandise</th>
+                    <th data-slot="table-head" class="text-foreground h-10 px-2 text-left align-middle font-normal whitespace-nowrap">Amount</th>
+                    <th data-slot="table-head" class="text-foreground h-10 px-2 text-left align-middle font-normal whitespace-nowrap">stage</th>
+                    <th data-slot="table-head" class="text-foreground h-10 px-2 text-left align-middle font-normal whitespace-nowrap">Expected order</th>
+                    <th data-slot="table-head" class="text-foreground h-10 px-2 text-left align-middle font-normal whitespace-nowrap">Owner</th>
+                    <th data-slot="table-head" class="text-foreground h-10 px-2 text-left align-middle font-normal whitespace-nowrap">Forecast</th>
+                    <th data-slot="table-head" class="text-foreground h-10 px-2 text-left align-middle font-normal whitespace-nowrap pr-6 w-16"></th>
+                  </tr>
+                </thead>
+                <tbody id="mockRows" data-slot="table-body" class="bg-white dark:bg-background [&_tr:last-child]:border-0"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <section aria-label="Notifications alt+T" tabindex="-1" aria-live="polite" aria-relevant="additions text" aria-atomic="false"></section>
+
+      <button data-slot="button" class="right-fixed-chat inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm leading-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-primary-foreground size-9 fixed right-4 bottom-4 h-14 w-14 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-50 bg-primary hover:bg-primary/90">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle h-6 w-6 text-white">
+          <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="actionsMenuWrap" data-radix-popper-content-wrapper dir="ltr" hidden>
+    <div data-side="bottom" data-align="end" role="menu" aria-orientation="vertical" data-state="open" data-radix-menu-content dir="ltr" id="actionsMenu" aria-labelledby="actionsMenuButton" data-slot="dropdown-menu-content" tabindex="-1" data-orientation="vertical">
+      <div role="menuitem" data-slot="dropdown-menu-item" data-variant="default" tabindex="-1" data-orientation="vertical" data-radix-collection-item>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download mr-2 h-4 w-4">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" x2="12" y1="15" y2="3"></line>
+        </svg>
+        CSV Export
+      </div>
+      <div role="menuitem" data-slot="dropdown-menu-item" data-variant="default" tabindex="-1" data-orientation="vertical" data-radix-collection-item>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload mr-2 h-4 w-4">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" x2="12" y1="3" y2="15"></line>
+        </svg>
+        CSV Import
+      </div>
+      <div role="menuitem" aria-disabled="true" data-disabled data-slot="dropdown-menu-item" data-variant="default" tabindex="-1" data-orientation="vertical" data-radix-collection-item>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 lucide-trash-2 mr-2 h-4 w-4">
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+          <line x1="10" x2="10" y1="11" y2="17"></line>
+          <line x1="14" x2="14" y1="11" y2="17"></line>
+        </svg>
+        Delete selected transactions
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const mockRows = [
+      ["Deal_001", "Placeholder Company A", "uncalculated", "Type A", "¥100,000", "Stage 1", "2026-04-01", "Owner A", "Pipeline"],
+      ["Deal_002", "Placeholder Company B", "uncalculated", "Type B", "¥250,000", "Stage 2", "2026-04-05", "Owner B", "Commit"],
+      ["Deal_003", "Placeholder Company C", "uncalculated", "Type B", "¥180,000", "Stage 3", "2026-04-09", "Owner A", "Best Case"],
+      ["Deal_004", "Placeholder Company D", "D 18/50", "Type A", "¥320,000", "Closed", "2026-04-12", "Owner C", "Closed Won"],
+      ["Deal_005", "Placeholder Company E", "uncalculated", "Type A", "¥210,000", "Closed", "2026-04-15", "Owner D", "Closed Won"],
+      ["Deal_006", "Placeholder Company F", "uncalculated", "Type A", "¥140,000", "Closed", "2026-04-18", "Owner A", "Closed Won"],
+      ["Deal_007", "Placeholder Company G", "uncalculated", "Type A", "¥195,000", "Stage 3", "2026-04-21", "Owner B", "Best Case"],
+      ["Deal_008", "Placeholder Company H", "D 12/50", "Type B", "¥400,000", "Review pending", "2026-04-24", "Owner C", "Upside"],
+      ["Deal_009", "Placeholder Company I", "uncalculated", "Type A", "¥275,000", "Decision pending", "2026-04-27", "Owner D", "Commit"],
+      ["Deal_010", "Placeholder Company J", "D 16/50", "Type A", "¥230,000", "Stage 2", "2026-05-01", "Owner A", "Upside"],
+      ["Deal_011", "Placeholder Company K", "D 14/50", "Type B", "¥360,000", "Proposal drafting", "2026-05-04", "Owner C", "Upside"],
+      ["Deal_012", "Placeholder Company L", "D 12/50", "Type B", "¥290,000", "Follow-up", "2026-05-08", "Owner C", "Upside"],
+      ["Deal_013", "Placeholder Company M", "D 14/50", "Type B", "¥260,000", "Stage 2", "2026-05-11", "Owner C", "Best Case"],
+      ["Deal_014", "Placeholder Company N", "uncalculated", "Type A", "¥245,000", "Qualification", "2026-05-15", "Owner B", "Commit"],
+      ["Deal_015", "Placeholder Company O", "D 19/50", "Type B", "¥380,000", "PoC planning", "2026-05-18", "Owner C", "Upside"]
+    ];
+
+    const tbody = document.getElementById("mockRows");
+    tbody.innerHTML = mockRows.map((row, i) => `
+      <tr data-slot="table-row" class="data-[state=selected]:bg-muted border-b transition-colors min-h-12 hover:bg-gray-50">
+        <td data-slot="table-cell" class="h-[48px] py-2.5 px-2 align-middle whitespace-nowrap overflow-hidden [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] pl-6">
+          <button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" data-slot="checkbox" class="peer bg-white border-border-subtle dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50" aria-label="Select row ${i + 1}"></button>
+        </td>
+        <td data-slot="table-cell" class="h-[48px] py-2.5 px-2 align-middle whitespace-nowrap overflow-hidden [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] cursor-pointer hover:underline"><div class="truncate">${row[0]}</div></td>
+        <td data-slot="table-cell" class="h-[48px] py-2.5 px-2 align-middle whitespace-nowrap overflow-hidden [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"><div class="truncate">${row[1]}</div></td>
+        <td data-slot="table-cell" class="h-[48px] py-2.5 px-2 align-middle whitespace-nowrap overflow-hidden [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"><div class="${row[2] === "uncalculated" ? "muted" : ""}">${row[2]}</div></td>
+        <td data-slot="table-cell" class="h-[48px] py-2.5 px-2 align-middle whitespace-nowrap overflow-hidden">${row[3]}</td>
+        <td data-slot="table-cell" class="h-[48px] py-2.5 px-2 align-middle whitespace-nowrap overflow-hidden">${row[4]}</td>
+        <td data-slot="table-cell" class="h-[48px] py-2.5 px-2 align-middle whitespace-nowrap overflow-hidden"><div class="truncate">${row[5]}</div></td>
+        <td data-slot="table-cell" class="h-[48px] py-2.5 px-2 align-middle whitespace-nowrap overflow-hidden">${row[6]}</td>
+        <td data-slot="table-cell" class="h-[48px] py-2.5 px-2 align-middle whitespace-nowrap overflow-hidden">${row[7]}</td>
+        <td data-slot="table-cell" class="h-[48px] py-2.5 px-2 align-middle whitespace-nowrap overflow-hidden">${row[8]}</td>
+        <td data-slot="table-cell" class="h-[48px] py-2.5 px-2 align-middle whitespace-nowrap overflow-hidden text-right pr-6">
+          <button data-slot="dropdown-menu-trigger" class="inline-flex items-center justify-center whitespace-nowrap text-sm leading-none transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 rounded-md gap-1.5 has-[>svg]:px-2.5 h-8 w-8 p-0" type="button" id="radix-row-${i}" aria-haspopup="menu" aria-expanded="false" data-state="closed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical h-4 w-4">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="12" cy="5" r="1"></circle>
+              <circle cx="12" cy="19" r="1"></circle>
+            </svg>
+          </button>
+        </td>
+      </tr>
+    `).join("");
+
+    const actionsMenuButton = document.getElementById("actionsMenuButton");
+    const actionsMenuWrap = document.getElementById("actionsMenuWrap");
+
+    function closeMenu() {
+      actionsMenuButton.setAttribute("aria-expanded", "false");
+      actionsMenuButton.setAttribute("data-state", "closed");
+      actionsMenuWrap.hidden = true;
+    }
+
+    function openMenu() {
+      actionsMenuButton.setAttribute("aria-expanded", "true");
+      actionsMenuButton.setAttribute("data-state", "open");
+      actionsMenuWrap.hidden = false;
+    }
+
+    actionsMenuButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (actionsMenuWrap.hidden) {
+        openMenu();
+      } else {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!actionsMenuWrap.hidden && !actionsMenuWrap.contains(event.target) && !actionsMenuButton.contains(event.target)) {
+        closeMenu();
+      }
+    });
+
+    const sidebar = document.getElementById("mockSidebar");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+    sidebarToggle.addEventListener("click", () => {
+      sidebar.classList.toggle("collapsed");
+    });
+  </script>
+</body>
+</html>
