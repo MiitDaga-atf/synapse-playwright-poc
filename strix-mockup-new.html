@@ -356,6 +356,36 @@
       background: #eef1f6;
     }
 
+    .toast-container {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 80;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      min-width: 220px;
+      max-width: 320px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #111827;
+      color: #fff;
+      font-size: 13px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.24);
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     @media (max-width: 1100px) {
       #mockSidebar {
         position: absolute;
@@ -570,7 +600,9 @@
         </div>
       </main>
 
-      <section aria-label="Notifications alt+T" tabindex="-1" aria-live="polite" aria-relevant="additions text" aria-atomic="false"></section>
+      <section aria-label="Notifications alt+T" tabindex="-1" aria-live="polite" aria-relevant="additions text" aria-atomic="false">
+        <div id="toastContainer" class="toast-container"></div>
+      </section>
 
       <button data-slot="button" class="right-fixed-chat inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm leading-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-primary-foreground size-9 fixed right-4 bottom-4 h-14 w-14 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-50 bg-primary hover:bg-primary/90">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle h-6 w-6 text-white">
@@ -582,7 +614,7 @@
 
   <div id="actionsMenuWrap" data-radix-popper-content-wrapper dir="ltr" hidden>
     <div data-side="bottom" data-align="end" role="menu" aria-orientation="vertical" data-state="open" data-radix-menu-content dir="ltr" id="actionsMenu" aria-labelledby="actionsMenuButton" data-slot="dropdown-menu-content" tabindex="-1" data-orientation="vertical">
-      <div role="menuitem" data-slot="dropdown-menu-item" data-variant="default" tabindex="-1" data-orientation="vertical" data-radix-collection-item>
+      <div id="csvExportMenuItem" role="menuitem" data-slot="dropdown-menu-item" data-variant="default" tabindex="-1" data-orientation="vertical" data-radix-collection-item>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download mr-2 h-4 w-4">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
           <polyline points="7 10 12 15 17 10"></polyline>
@@ -685,6 +717,30 @@
       if (!actionsMenuWrap.hidden && !actionsMenuWrap.contains(event.target) && !actionsMenuButton.contains(event.target)) {
         closeMenu();
       }
+    });
+
+    const toastContainer = document.getElementById("toastContainer");
+    const csvExportMenuItem = document.getElementById("csvExportMenuItem");
+
+    function showToast(message) {
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = message;
+      toastContainer.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.add("show");
+      });
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 200);
+      }, 2500);
+    }
+
+    csvExportMenuItem.addEventListener("click", () => {
+      showToast("CSV sent to mail");
+      closeMenu();
     });
 
     const sidebar = document.getElementById("mockSidebar");
